@@ -115,43 +115,56 @@ backend/
 
 ### Installation
 
-1. Create virtual environment:
+1. **Create virtual environment:**
 
-```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
-```
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
 
-2. Install dependencies:
+2. **Install dependencies:**
 
-```bash
-pip install -r requirements.txt
-```
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-3. Set up environment variables:
+3. **Set up environment variables:**
+   Create `.env` file in the backend directory:
 
-```bash
-cp config.env.example config.env
-# Edit config.env with your settings
-```
+   ```
+   DATABASE_URL=postgresql://user:password@localhost:5432/pythia_chat
+   REDIS_URL=redis://localhost:6330
+   JWT_SECRET_KEY=your-super-secret-jwt-key
+   ENVIRONMENT=development
+   ```
 
-4. Generate Prisma client:
+4. **Set up database:**
+   - Install PostgreSQL and Redis locally
+   - Create database: `pythia_chat`
+   - Update connection strings in `.env` if needed
 
-```bash
-prisma generate
-```
+5. **Generate Prisma client:**
 
-5. Run database migrations:
+   ```bash
+   prisma generate
+   ```
 
-```bash
-prisma db push
-```
+6. **Run database migrations:**
 
-6. Start the development server:
+   ```bash
+   prisma db push
+   ```
 
-```bash
-python start.py
-```
+7. **Set up default channels:**
+
+   ```bash
+   python scripts/setup_default_channels.py
+   ```
+
+8. **Start the development server:**
+   ```bash
+   python start.py
+   ```
 
 The API will be available at `http://localhost:8000`
 

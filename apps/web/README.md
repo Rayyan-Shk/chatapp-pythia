@@ -35,16 +35,38 @@ This is the main frontend application built with Next.js 14, featuring a modern 
 
 ### Development
 
-```bash
-# Install dependencies
-npm install
+#### Prerequisites
 
-# Start development server
-npm run dev
+- Node.js 18+
+- Backend server running (see backend README for setup)
 
-# Or using turbo
-npm run dev --filter=web
-```
+#### Setup
+
+1. **Install dependencies**
+
+   ```bash
+   # From project root
+   npm install
+   ```
+
+2. **Set up environment variables**
+   Create `.env.local` in `apps/web/`:
+
+   ```
+   NEXT_PUBLIC_API_URL=http://localhost:8000
+   NEXT_PUBLIC_WS_URL=ws://localhost:8000
+   ```
+
+3. **Start the frontend**
+
+   ```bash
+   # From project root
+   npm run dev --filter=web
+
+   # Or from apps/web directory
+   cd apps/web
+   npm run dev
+   ```
 
 Open [http://localhost:3000](http://localhost:3000) to view the application.
 

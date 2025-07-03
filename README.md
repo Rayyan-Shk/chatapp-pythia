@@ -92,18 +92,70 @@ Pythia Conversations is a full-stack chat application designed for marketing tea
 
 ### Development
 
-For development without Docker:
+For development without Docker, you'll need to set up both frontend and backend separately:
 
-```bash
-# Install dependencies
-npm install
+#### Backend Setup
 
-# Start all services
-npm run dev
+1. **Install Python dependencies**
 
-# Or start specific services
-npm run dev --filter=web
-npm run dev --filter=docs
+   ```bash
+   cd backend
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   pip install -r requirements.txt
+   ```
+
+2. **Set up database and Redis**
+   - Install PostgreSQL and Redis locally
+   - Create database: `pythia_chat`
+   - Update connection strings in `backend/app/core/config.py` if needed
+
+3. **Generate Prisma client and setup database**
+
+   ```bash
+   cd backend
+   prisma generate
+   prisma db push
+   python scripts/setup_default_channels.py
+   ```
+
+4. **Start the backend server**
+   ```bash
+   python start.py
+   ```
+   Backend will be available at: http://localhost:8000
+
+#### Frontend Setup
+
+1. **Install dependencies**
+
+   ```bash
+   npm install
+   ```
+
+2. **Start the frontend**
+   ```bash
+   npm run dev --filter=web
+   ```
+   Frontend will be available at: http://localhost:3000
+
+#### Environment Variables
+
+Create `.env` files in both `backend/` and `apps/web/` directories:
+
+**Backend (.env)**
+
+```
+DATABASE_URL=postgresql://user:password@localhost:5432/pythia_chat
+REDIS_URL=redis://localhost:6330
+JWT_SECRET_KEY=your-super-secret-jwt-key
+```
+
+**Frontend (.env.local)**
+
+```
+NEXT_PUBLIC_API_URL=http://localhost:8000
+NEXT_PUBLIC_WS_URL=ws://localhost:8000
 ```
 
 ## 📁 Project Structure
