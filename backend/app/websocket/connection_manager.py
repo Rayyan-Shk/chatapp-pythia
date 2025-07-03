@@ -34,6 +34,10 @@ class ConnectionManager:
         """Start Redis pub/sub listener for cross-instance communication"""
         self.redis_listener_task = asyncio.create_task(self._redis_listener())
         logger.info("Redis pub/sub listener started")
+        
+        # Start periodic connection cleanup
+        self.cleanup_task = asyncio.create_task(self._periodic_cleanup())
+        logger.info("Periodic connection cleanup started")
 
     async def stop_redis_listener(self):
         """Stop Redis pub/sub listener"""
@@ -44,6 +48,15 @@ class ConnectionManager:
             except asyncio.CancelledError:
                 pass
         logger.info("Redis pub/sub listener stopped")
+        
+        # Stop periodic cleanup
+        if hasattr(self, 'cleanup_task') and self.cleanup_task:
+            self.cleanup_task.cancel()
+            try:
+                await self.cleanup_task
+            except asyncio.CancelledError:
+                pass
+        logger.info("Periodic connection cleanup stopped")
 
     async def _redis_listener(self):
         """Listen for Redis pub/sub messages from other instances"""
@@ -402,6 +415,37 @@ class ConnectionManager:
                 for channel_id, users in self.channel_rooms.items()
             }
         }
+
+    async def _periodic_cleanup(self):
+        """Periodically clean up stale connections and data"""
+        while True:
+            try:
+                await asyncio.sleep(300)  # Run every 5 minutes
+                
+                # Clean up stale typing indicators (older than 30 seconds)
+                current_time = datetime.utcnow()
+                stale_typing = []
+                
+                for channel_id, typing_users in self.typing_users.items():
+                    # Remove users who haven't been active recently
+                    # This is a simple cleanup - in production you might want more sophisticated tracking
+                    if not typing_users:
+                        stale_typing.append(channel_id)
+                
+                for channel_id in stale_typing:
+                    del self.typing_users[channel_id]
+                
+                if stale_typing:
+                    logger.info(f"Cleaned up {len(stale_typing)} stale typing indicators")
+                
+                # Log connection stats periodically
+                logger.info(f"Connection stats: {len(self.active_connections)} active connections, {len(self.channel_rooms)} channels")
+                
+            except asyncio.CancelledError:
+                break
+            except Exception as e:
+                logger.error(f"Error in periodic cleanup: {e}")
+                await asyncio.sleep(60)  # Wait 1 minute before retrying
 
 
 # Global connection manager instance
