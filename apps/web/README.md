@@ -1,24 +1,93 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/create-next-app).
+# Pythia Conversations - Frontend
 
-## Getting Started
+The Next.js frontend application for Pythia Conversations, a modern team chat application with real-time features.
 
-First, run the development server:
+## 🚀 Overview
+
+This is the main frontend application built with Next.js 14, featuring a modern chat interface with WhatsApp-like functionality including real-time messaging, typing indicators, message reactions, and mobile responsiveness.
+
+## 🛠️ Tech Stack
+
+- **Next.js 14** - React framework with App Router
+- **TypeScript** - Type-safe development
+- **TailwindCSS** - Utility-first CSS framework
+- **shadcn/ui** - Modern component library
+- **Zustand** - State management
+- **WebSocket** - Real-time communication
+
+## ✨ Features
+
+- **📱 Mobile Compatible** - Fully responsive design
+- **⚡ Real-time Typing Indicators** - WhatsApp-like typing indicators
+- **🏢 Channel Management** - Create and manage team channels
+- **👥 Member Management** - Add and remove channel members
+- **💬 Message Replies** - Threaded message replies
+- **😊 Message Reactions** - Emoji reactions to messages
+- **🔍 Global Search** - Search across messages and users
+- **🔔 Real-time Notifications** - Instant notifications
+
+## 🚀 Quick Start
+
+### Prerequisites
+
+- Node.js 18+
+- Docker (for full stack)
+
+### Development
 
 ```bash
+# Install dependencies
+npm install
+
+# Start development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
+# Or using turbo
+npm run dev --filter=web
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to view the application.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Production Build
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load Inter, a custom Google Font.
+```bash
+# Build the application
+npm run build
+
+# Start production server
+npm start
+```
+
+## 📁 Project Structure
+
+```
+apps/web/
+├── app/                    # Next.js App Router
+│   ├── (auth)/            # Authentication routes
+│   ├── chat/              # Chat interface
+│   └── layout.tsx         # Root layout
+├── components/            # React components
+│   ├── auth/              # Authentication components
+│   ├── chat/              # Chat components
+│   ├── ui/                # UI components
+│   └── providers/         # Context providers
+├── lib/                   # Utilities and configurations
+│   ├── api/               # API client
+│   ├── store/             # Zustand stores
+│   └── websocket/         # WebSocket client
+└── hooks/                 # Custom React hooks
+```
+
+## 🔧 Configuration
+
+Key environment variables:
+
+- `NEXT_PUBLIC_API_URL` - Backend API endpoint
+- `NEXT_PUBLIC_WS_URL` - WebSocket endpoint
+
+## 📋 About This Project
+
+This is a skill test and assignment project demonstrating full-stack development capabilities with modern web technologies and real-time features.
 
 ## Learn More
 
