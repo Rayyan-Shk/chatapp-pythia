@@ -1,0 +1,26 @@
+# Prevent automated bot commits
+* -text
+*.md text
+*.txt text
+*.json text
+*.yml text
+*.yaml text
+*.js text
+*.ts text
+*.tsx text
+*.py text
+*.sh text
+*.bat text
+*.ps1 text
+
+# Ensure proper line endings
+*.md text eol=lf
+*.txt text eol=lf
+*.json text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.js text eol=lf
+*.ts text eol=lf
+*.tsx text eol=lf
+*.py text eol=lf
+*.sh text eol=lf 
