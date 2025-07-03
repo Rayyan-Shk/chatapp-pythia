@@ -5,12 +5,12 @@ A modern, real-time team chat application built for marketing teams with WhatsAp
 ## 📱 Screenshots
 
 <div align="center">
-  <img src="apps/web/public/project/home (2).png" alt="Home Dashboard" width="300" />
-  <img src="apps/web/public/project/Login (2).png" alt="Login Screen" width="300" />
-  <img src="apps/web/public/project/Register.png" alt="Registration Screen" width="300" />
-  <img src="apps/web/public/project/Chat View.png" alt="Chat Interface" width="300" />
-  <img src="apps/web/public/project/Create Channel.png" alt="Create Channel" width="300" />
-  <img src="apps/web/public/project/Mobile view.png" alt="Mobile View" width="300" />
+  <img src="apps/web/public/project/home (2).png" alt="Home Dashboard" />
+  <img src="apps/web/public/project/Login (2).png" alt="Login Screen" />
+  <img src="apps/web/public/project/Register.png" alt="Registration Screen" />
+  <img src="apps/web/public/project/Chat View.png" alt="Chat Interface" />
+  <img src="apps/web/public/project/Create Channel.png" alt="Create Channel" />
+  <img src="apps/web/public/project/Mobile view.png" alt="Mobile View" />
 </div>
 
 ## 🚀 Overview
