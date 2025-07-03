@@ -62,6 +62,30 @@ export const useWebSocket = (): UseWebSocketReturn => {
     }
   }, [activeChannelId]);
 
+  // Connection health monitoring
+  useEffect(() => {
+    if (!isAuthenticated || !token) return;
+
+    const healthCheckInterval = setInterval(() => {
+      const status = wsClient.getStatus();
+      const isConnected = wsClient.isConnected();
+      
+      // If status says connected but WebSocket is not actually connected
+      if (status === 'connected' && !isConnected) {
+        console.warn('WebSocket status mismatch detected, attempting reconnect...');
+        reconnect();
+      }
+      
+      // If disconnected for too long, try to reconnect
+      if (status === 'disconnected') {
+        console.log('WebSocket disconnected, attempting reconnect...');
+        connect();
+      }
+    }, 10000); // Check every 10 seconds
+
+    return () => clearInterval(healthCheckInterval);
+  }, [isAuthenticated, token, connect, reconnect]);
+
   // Handle authentication changes
   useEffect(() => {
     if (!isAuthenticated || !token) {

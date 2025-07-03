@@ -312,7 +312,7 @@ export class WebSocketClient {
 export const wsClient = new WebSocketClient({
   maxReconnectAttempts: 5,
   reconnectDelay: 1000,
-  heartbeatInterval: 30000,
+  heartbeatInterval: 15000, // Reduced from 30s to 15s to match backend expectations
   timeout: 10000,
 });
 
