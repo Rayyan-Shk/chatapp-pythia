@@ -11,6 +11,8 @@ node_modules
 .env.development.local
 .env.test.local
 .env.production.local
+.env.backup
+.env.tmp
 
 # Testing
 coverage
@@ -27,6 +29,23 @@ out/
 build
 dist
 
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+.venv/
+.ENV/
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
 
 # Debug
 npm-debug.log*
