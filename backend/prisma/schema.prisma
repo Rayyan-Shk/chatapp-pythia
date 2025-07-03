@@ -1,0 +1,196 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+    provider = "prisma-client-py"
+    output   = "../app/generated"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = env("DATABASE_URL")
+}
+
+model User {
+    id          String     @id @default(cuid())
+    email       String     @unique
+    username    String     @unique
+    password    String // Hashed password
+    avatar      String?
+    status      UserStatus @default(ACTIVE)
+    bannedUntil DateTime?
+    createdAt   DateTime   @default(now())
+    updatedAt   DateTime   @updatedAt
+
+    // Relations
+    messages       Message[]
+    channelMembers ChannelMember[]
+    mentions       Mention[]
+    reactions      MessageReaction[]
+    roles          UserRole[]        @relation("UserRoles")
+    adminActions   AdminAction[]     @relation("AdminActions")
+    assignedRoles  UserRole[]        @relation("RoleAssigner")
+
+    @@map("users")
+}
+
+enum UserStatus {
+    ACTIVE
+    SUSPENDED
+    BANNED
+}
+
+model UserRole {
+    id         String   @id @default(cuid())
+    role       Role
+    channelId  String? // NULL for global roles
+    assignedAt DateTime @default(now())
+    assignedBy String
+
+    // Foreign keys
+    userId String
+
+    // Relations
+    user     User     @relation("UserRoles", fields: [userId], references: [id], onDelete: Cascade)
+    channel  Channel? @relation(fields: [channelId], references: [id], onDelete: Cascade)
+    assigner User     @relation("RoleAssigner", fields: [assignedBy], references: [id])
+
+    // Unique role per user per channel (or global)
+    @@unique([userId, role, channelId])
+    @@map("user_roles")
+}
+
+enum Role {
+    MEMBER
+    MODERATOR
+    ADMIN
+    SUPER_ADMIN
+}
+
+model AdminAction {
+    id         String          @id @default(cuid())
+    action     AdminActionType
+    targetType AdminTargetType
+    targetId   String
+    reason     String?
+    metadata   Json? // Additional action data
+    createdAt  DateTime        @default(now())
+
+    // Foreign keys
+    adminId String
+
+    // Relations
+    admin User @relation("AdminActions", fields: [adminId], references: [id])
+
+    @@map("admin_actions")
+}
+
+enum AdminActionType {
+    BAN_USER
+    UNBAN_USER
+    SUSPEND_USER
+    UNSUSPEND_USER
+    DELETE_MESSAGE
+    PIN_MESSAGE
+    UNPIN_MESSAGE
+    ASSIGN_ROLE
+    REMOVE_ROLE
+    CREATE_CHANNEL
+    DELETE_CHANNEL
+    ARCHIVE_CHANNEL
+    KICK_USER
+}
+
+enum AdminTargetType {
+    USER
+    MESSAGE
+    CHANNEL
+    ROLE
+}
+
+model Channel {
+    id          String   @id @default(cuid())
+    name        String   @unique
+    description String?
+    createdAt   DateTime @default(now())
+    updatedAt   DateTime @updatedAt
+
+    // Relations
+    messages Message[]
+    members  ChannelMember[]
+    roles    UserRole[]
+
+    @@map("channels")
+}
+
+model Message {
+    id        String   @id @default(cuid())
+    content   String
+    isEdited  Boolean  @default(false)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    // Foreign keys
+    userId    String
+    channelId String
+
+    // Relations
+    user      User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+    channel   Channel           @relation(fields: [channelId], references: [id], onDelete: Cascade)
+    mentions  Mention[]
+    reactions MessageReaction[]
+
+    @@map("messages")
+}
+
+model ChannelMember {
+    id       String   @id @default(cuid())
+    joinedAt DateTime @default(now())
+
+    // Foreign keys
+    userId    String
+    channelId String
+
+    // Relations
+    user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+    channel Channel @relation(fields: [channelId], references: [id], onDelete: Cascade)
+
+    // Ensure unique membership per user per channel
+    @@unique([userId, channelId])
+    @@map("channel_members")
+}
+
+model Mention {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+
+    // Foreign keys
+    userId    String
+    messageId String
+
+    // Relations
+    user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+    message Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+    // Ensure unique mention per user per message
+    @@unique([userId, messageId])
+    @@map("mentions")
+}
+
+model MessageReaction {
+    id        String   @id @default(cuid())
+    emoji     String
+    createdAt DateTime @default(now())
+
+    // Foreign keys
+    userId    String
+    messageId String
+
+    // Relations
+    user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+    message Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+    // Ensure unique reaction per user per message per emoji
+    @@unique([userId, messageId, emoji])
+    @@map("message_reactions")
+}
