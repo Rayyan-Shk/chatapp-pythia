@@ -75,7 +75,7 @@ Pythia Conversations is a full-stack chat application designed for marketing tea
 1. **Clone the repository**
 
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/Rayyan-Shk/chatapp-pythia.git
    cd chatapp-pythia
    ```
 
